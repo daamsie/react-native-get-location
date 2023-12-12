@@ -22,20 +22,15 @@
  * SOFTWARE.
  */
 
-import {Linking, NativeModules, Platform} from 'react-native';
+import {Linking, NativeModules} from 'react-native';
 
-import {
-  GetCurrentPositionOptions,
-  Location,
-  requestAndroidPermission,
-} from './utils';
+import {GetCurrentPositionOptions, Location} from './utils';
 import LocationError, {isLocationError} from './LocationError';
 
 export {default as LocationError, isLocationError} from './LocationError';
 export type {LocationErrorCode} from './LocationError';
 export type {GetCurrentPositionOptions, Location} from './utils';
 
-const {OS} = Platform;
 const {ReactNativeGetLocation} = NativeModules;
 
 const DEFAULT_OPTIONS: GetCurrentPositionOptions = {
@@ -48,10 +43,6 @@ const GetLocation = {
     options: GetCurrentPositionOptions = DEFAULT_OPTIONS,
   ): Promise<Location> {
     const opts = {...DEFAULT_OPTIONS, ...options};
-    if (OS === 'android') {
-      await requestAndroidPermission(opts.enableHighAccuracy, opts.rationale);
-    }
-
     try {
       return ReactNativeGetLocation.getCurrentPosition(opts);
     } catch (error) {
